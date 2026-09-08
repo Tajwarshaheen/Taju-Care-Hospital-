@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Shared functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && getUserRole() == 'super_admin';
+    }
+
+    match /patients/{patientId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /doctors/{doctorId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /departments/{departmentId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+
+    match /appointments/{appointmentId} {
+      allow read: if true;
+      allow write: if true; // Public booking
+    }
+
+    match /beds/{bedId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+
+    match /medicines/{medicineId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated();
+    }
+  }
+}

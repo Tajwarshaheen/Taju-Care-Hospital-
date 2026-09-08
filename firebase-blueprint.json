@@ -1,0 +1,106 @@
+{
+  "project_id": "diesel-tempo-wn96h",
+  "database_id": "ai-studio-4140a9f0-ab04-46b4-b012-80a6e9a55cdf",
+  "collections": [
+    {
+      "name": "users",
+      "fields": [
+        { "name": "name", "type": "string" },
+        { "name": "email", "type": "string" },
+        { "name": "role", "type": "string" },
+        { "name": "createdAt", "type": "timestamp" }
+      ],
+      "rules": [
+        { "action": "read", "condition": "request.auth != null" },
+        { "action": "write", "condition": "request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin'" }
+      ]
+    },
+    {
+      "name": "patients",
+      "fields": [
+        { "name": "name", "type": "string" },
+        { "name": "age", "type": "number" },
+        { "name": "gender", "type": "string" },
+        { "name": "phone", "type": "string" },
+        { "name": "address", "type": "string" },
+        { "name": "emergencyContact", "type": "string" },
+        { "name": "bloodGroup", "type": "string" },
+        { "name": "assignedDoctorId", "type": "string", "optional": true },
+        { "name": "departmentId", "type": "string", "optional": true },
+        { "name": "status", "type": "string" }
+      ],
+      "rules": [
+        { "action": "read", "condition": "request.auth != null" },
+        { "action": "write", "condition": "request.auth != null" }
+      ]
+    },
+    {
+      "name": "doctors",
+      "fields": [
+        { "name": "userId", "type": "string" },
+        { "name": "name", "type": "string" },
+        { "name": "specialty", "type": "string" },
+        { "name": "departmentId", "type": "string" },
+        { "name": "status", "type": "string" }
+      ],
+      "rules": [
+        { "action": "read", "condition": "true" },
+        { "action": "write", "condition": "request.auth != null" }
+      ]
+    },
+    {
+      "name": "departments",
+      "fields": [
+        { "name": "name", "type": "string" },
+        { "name": "description", "type": "string" }
+      ],
+      "rules": [
+        { "action": "read", "condition": "true" },
+        { "action": "write", "condition": "request.auth != null" }
+      ]
+    },
+    {
+      "name": "appointments",
+      "fields": [
+        { "name": "patientId", "type": "string" },
+        { "name": "doctorId", "type": "string" },
+        { "name": "departmentId", "type": "string" },
+        { "name": "date", "type": "string" },
+        { "name": "time", "type": "string" },
+        { "name": "status", "type": "string" },
+        { "name": "reason", "type": "string", "optional": true }
+      ],
+      "rules": [
+        { "action": "read", "condition": "true" },
+        { "action": "write", "condition": "true" }
+      ]
+    },
+    {
+      "name": "beds",
+      "fields": [
+        { "name": "bedNumber", "type": "string" },
+        { "name": "roomNumber", "type": "string" },
+        { "name": "departmentId", "type": "string" },
+        { "name": "patientId", "type": "string", "optional": true },
+        { "name": "status", "type": "string" },
+        { "name": "type", "type": "string" }
+      ],
+      "rules": [
+        { "action": "read", "condition": "request.auth != null" },
+        { "action": "write", "condition": "request.auth != null" }
+      ]
+    },
+    {
+      "name": "medicines",
+      "fields": [
+        { "name": "name", "type": "string" },
+        { "name": "quantity", "type": "number" },
+        { "name": "lowStockWarning", "type": "number" }
+      ],
+      "rules": [
+        { "action": "read", "condition": "request.auth != null" },
+        { "action": "write", "condition": "request.auth != null" }
+      ]
+    }
+  ]
+}
